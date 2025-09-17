@@ -1,26 +1,64 @@
-import NIOSSL
+//// Sources/App/configure.swift
+//import Vapor
+//import Fluent
+//import FluentMySQLDriver
+//import JWT
+//
+//public func configure(_ app: Application) async throws {
+//    // Database configuration
+//    var tlsConfiguration = TLSConfiguration.makeClientConfiguration()
+//    // This is the key line: it tells the client to not verify the server's certificate.
+//    tlsConfiguration.certificateVerification = .none
+//    
+//    app.databases.use(.mysql(
+//        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
+//        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
+//        username: Environment.get("DATABASE_USERNAME") ?? "root",
+//        password: Environment.get("DATABASE_PASSWORD") ?? "",
+//        database: Environment.get("DATABASE_NAME") ?? "headless_cms",
+//        tlsConfiguration: tlsConfiguration // <-- Add this parameter
+//    ), as: .mysql)
+//    
+//    // JWT configuration
+//    // Correctly initialize HMACKey from the string secret
+//    await app.jwt.keys.add(hmac: HMACKey(stringLiteral: Environment.get("JWT_SECRET") ?? "secret-key"), digestAlgorithm: .sha256)
+//    
+//    // Migrations
+//    app.migrations.add(CreateUser())
+//    app.migrations.add(CreateArticle())
+//    
+//    try await app.autoMigrate()
+//    
+//    // Routes
+//    try routes(app)
+//}
+
+// Sources/App/configure.swift
+import Vapor
 import Fluent
 import FluentMySQLDriver
-import Leaf
-import Vapor
+import JWT
 
-// configures your application
 public func configure(_ app: Application) async throws {
-    // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-
-    app.databases.use(DatabaseConfigurationFactory.mysql(
+    // Database configuration
+    app.databases.use(.mysql(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? MySQLConfiguration.ianaPortNumber,
-        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
+        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
+        username: Environment.get("DATABASE_USERNAME") ?? "root",
+        password: Environment.get("DATABASE_PASSWORD") ?? "",
+        database: Environment.get("DATABASE_NAME") ?? "headless_cms"
     ), as: .mysql)
-
-    app.migrations.add(CreateTodo())
-
-    app.views.use(.leaf)
-
-    // register routes
+    
+    // JWT configuration
+    await app.jwt.keys.add(hmac: HMACKey(stringLiteral: Environment.get("JWT_SECRET") ?? "secret-key"), digestAlgorithm: .sha256)
+        
+    // Migrations
+    // app.migrations.add(CreateUser())
+    // app.migrations.add(CreateArticle())
+    
+    // Comment this out if tables already exist
+    // try await app.autoMigrate()
+    
+    // Routes
     try routes(app)
 }
