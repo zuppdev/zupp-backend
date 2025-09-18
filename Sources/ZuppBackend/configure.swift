@@ -46,8 +46,10 @@ public func configure(_ app: Application) async throws {
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
         username: Environment.get("DATABASE_USERNAME") ?? "root",
         password: Environment.get("DATABASE_PASSWORD") ?? "",
-        database: Environment.get("DATABASE_NAME") ?? "zupp_cms"
+        database: Environment.get("DATABASE_NAME") ?? "zupp_cms",
+        tlsConfiguration: .forClient(certificateVerification: .none) // 👈 disable SSL verification
     ), as: .mysql)
+
     
     // JWT configuration
     await app.jwt.keys.add(hmac: HMACKey(stringLiteral: Environment.get("JWT_SECRET") ?? "secret-key"), digestAlgorithm: .sha256)
