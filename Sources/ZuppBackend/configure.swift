@@ -43,11 +43,11 @@ public func configure(_ app: Application) async throws {
     // Database configuration
     app.databases.use(.mysql(
         hostname: Environment.get("DATABASE_HOST") ?? "127.0.0.1",
-        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
+        port: Environment.get("DATABASE_PORT").flatMap(Int.init) ?? 3306,
         username: Environment.get("DATABASE_USERNAME") ?? "root",
         password: Environment.get("DATABASE_PASSWORD") ?? "",
         database: Environment.get("DATABASE_NAME") ?? "zupp_cms",
-        tlsConfiguration: .forClient(certificateVerification: .none) // 👈 disable SSL verification
+        tlsConfiguration: .none   // 👈 add this line
     ), as: .mysql)
 
     
