@@ -42,11 +42,11 @@ import JWT
 public func configure(_ app: Application) async throws {
     // Database configuration
     app.databases.use(.mysql(
-        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
+        hostname: Environment.get("DATABASE_HOST") ?? "127.0.0.1",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 3306,
         username: Environment.get("DATABASE_USERNAME") ?? "root",
         password: Environment.get("DATABASE_PASSWORD") ?? "",
-        database: Environment.get("DATABASE_NAME") ?? "headless_cms"
+        database: Environment.get("DATABASE_NAME") ?? "zupp_cms"
     ), as: .mysql)
     
     // JWT configuration
